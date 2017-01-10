@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>新闻头条</title>
+    <script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $(".btn").click(function(){
+                console.log("------开始获取新闻列表------");
+                getNewsList();
+
+            });
+            function getNewsList(){
+                $.ajax({
+                    type:"get",
+                    url:'http://toutiao-ali.juheapi.com/toutiao/index',
+                    data:{
+                        //类型,top(头条，默认),shehui(社会),guonei(国内),guoji(国际),yule(娱乐),tiyu(体育)junshi(军事),keji(科技),caijing(财经),shishang(时尚)
+                        type:'shishang'
+                    },
+                    beforeSend:function(xhr){
+                        xhr.setRequestHeader('Authorization', 'APPCODE 08bc0a1c78414c2ca86356b73578cd76');
+                    },
+                    success:function(result,status,xhr){
+                        console.log(result.result.data);
+                    },
+                    error:function(xhr,status,error){
+                        console.log("error");
+                        console.log(error);
+                    },
+                    complete:function(xhr,status){
+                        if(xhr.responseJSON){
+                            var returnData = xhr.responseJSON.result.data;
+                        }
+                        console.log("------新闻列表获取完毕------");
+                        console.log("------将数据写到页面上------");
+                        writeList(returnData);
+                }
+                })
+            }
+
+            function writeList(ArticleList){
+                for(var index in ArticleList){
+                    var item = ArticleList[index];
+                    var category = item.category?item.category:'时尚';
+                    var itemHtml = "<div class='article-item'><h2 class='item-title'><a target='_blank' href='"+item.url+"'>"+item.title+"</a></h2><div class='item-category-date'><span class='category'>"+category+"</span><span class='date'>"+item.date+"</span></div></div>";
+                    $(".articleList").append(itemHtml);
+                }
+            }
+        });
+    </script>
+</head>
+<style>
+    *{
+        text-decoration: none;
+        color:#666;
+        font-size: 16px;
+        font-family: '微软雅黑',sans-serif;
+    }
+    .btn{
+        width: 200px;
+        height: 38px;
+        background: burlywood;
+    }
+    .articleList{
+        width:100%;
+        border-top:1px solid burlywood;
+        margin-top: 30px;
+    }
+    .article-item{
+       border-bottom: 1px solid #ddd;
+    }
+    .item-title a{
+        color:cornflowerblue;
+    }
+    .item-category-date span{
+        font-size: 12px;
+    }
+    .item-category-date .category{
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+        background: burlywood;
+        text-align: center;
+        line-height: 20px;
+        margin-bottom: 4px;
+    }
+    .item-category-date .date{
+        margin-left: 20px;
+    }
+</style>
+<body>
+
+<button class="btn">点击获得新闻头条</button>
+
+<div class="articleList">
+    <!--<div class="article-item">
+        <h2 class="item-title">这是标题</h2>
+        <div class="item-category-date">
+            <span class="category">社会新闻网</span>
+            <span class="date">2017-9-6</span>
+        </div>
+    </div>
+    <div class="article-item">
+        <h2 class="item-title">这是标题</h2>
+        <div class="item-category-date">
+            <span class="category">社会新闻网</span>
+            <span class="date">2017-9-6</span>
+        </div>
+    </div>
+    <div class="article-item">
+        <h2 class="item-title">这是标题</h2>
+        <div class="item-category-date">
+            <span class="category">社会新闻网</span>
+            <span class="date">2017-9-6</span>
+        </div>
+    </div>-->
+</div>
+
+</body>
+</html>
